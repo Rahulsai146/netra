@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title> Netra | Rover Control</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700;800&display=swap');
+
+            :root {
+                --bg-dark: #090d16;
+                --bg-gradient: radial-gradient(circle at 50% 0%, #162238 0%, #090d16 70%);
+                --card-bg: rgba(19, 28, 46, 0.75);
+                --card-border: rgba(56, 189, 248, 0.2);
+                --card-border-hover: rgba(56, 189, 248, 0.55);
+                --accent-primary: #38bdf8;
+                --accent-secondary: #10b981;
+                --text-main: #f1f5f9;
+                --text-muted: #94a3b8;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                padding: 40px 24px;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+                background-color: var(--bg-dark);
+                background-image: 
+                    var(--bg-gradient),
+                    linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+                background-size: 100% 100%, 32px 32px, 32px 32px;
+                color: var(--text-main);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            main {
+                width: 100%;
+                max-width: 1120px;
+            }
+
+            header {
+                text-align: center;
+                margin-bottom: 48px;
+            }
+
+            .brand {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 42px;
+                font-weight: 800;
+                letter-spacing: 6px;
+                background: linear-gradient(135deg, #ffffff 0%, #38bdf8 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin: 0 0 12px 0;
+                filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.25));
+            }
+
+            .subtitle {
+                font-size: 14px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 3px;
+                color: var(--accent-secondary);
+                margin: 0;
+                display: inline-block;
+                padding: 6px 16px;
+                border-radius: 999px;
+                background: rgba(16, 185, 129, 0.1);
+                border: 1px solid rgba(16, 185, 129, 0.25);
+            }
+
+            .cards {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 24px;
+            }
+
+            @media (max-width: 900px) {
+                .cards {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .card {
+                background: var(--card-bg);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid var(--card-border);
+                border-radius: 16px;
+                padding: 28px;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+                transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+                opacity: 0.6;
+            }
+
+            .card:hover {
+                transform: translateY(-4px);
+                border-color: var(--card-border-hover);
+                box-shadow: 0 20px 40px -15px rgba(56, 189, 248, 0.15);
+            }
+
+            .icon {
+                width: 54px;
+                height: 54px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 26px;
+                padding: 0;
+                border-radius: 14px;
+                background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(56, 189, 248, 0.04));
+                border: 1px solid rgba(56, 189, 248, 0.3);
+                box-shadow: inset 0 0 12px rgba(56, 189, 248, 0.15);
+                margin-bottom: 8px;
+            }
+
+            h2 {
+                color: #ffffff;
+                font-size: 20px;
+                font-weight: 600;
+                margin: 14px 0 8px 0;
+                letter-spacing: 0.3px;
+            }
+
+            .status {
+                color: var(--text-muted);
+                font-size: 15px;
+                margin: 0 0 20px 0;
+            }
+
+            .status-text {
+                font-weight: 600;
+                color: var(--accent-primary);
+                background: rgba(56, 189, 248, 0.12);
+                padding: 3px 10px;
+                border-radius: 6px;
+                margin-left: 4px;
+                letter-spacing: 0.4px;
+            }
+
+            .battery-track {
+                height: 12px;
+                background-color: rgba(15, 23, 42, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 20px;
+                overflow: hidden;
+                margin-bottom: 24px;
+                padding: 2px;
+            }
+
+            .battery-fill {
+                width: 100%;
+                height: 100%;
+                border-radius: 20px;
+                background: linear-gradient(90deg, #a51010, #a10909, #34d399);
+                box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+                transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            button {
+                margin-top: auto;
+                background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+                color: #ffffff;
+                font-family: inherit;
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                padding: 12px 20px;
+                border-radius: 10px;
+                cursor: pointer;
+                box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+                transition: all 0.2s ease;
+            }
+
+            button:hover {
+                background: linear-gradient(135deg, #186e96 0%, #264a83 100%);
+                box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+                transform: translateY(-1px);
+            }
+
+            button:active {
+                transform: translateY(1px);
+            }
+        </style>
+        <script>
+            let battery;
+            battery = 100;
+            function batteryDemo()
+            {
+                if (battery >0)
+                {
+                    battery = battery - 10;
+                    document.getElementById("batteryBar").style.width = battery + "%";
+                    document.getElementById("batteryStatus").textContent=battery + "%";
+                }
+                else
+                {
+                    alert("Battery is empty! Please recharge.");
+                }
+            }
+        </script>
+        <script src="netra.js"></script>
+    </head>
+    <body>
+        <main>
+            <header>
+                <h1 class="brand">NETRA</h1>
+                <p class="subtitle">Campus Rover Control</p>
+            </header>
+            <div class="cards">
+                <section class="card">
+                    <div class="icon" aria-hidden="true">🚀</div>
+                    <h2>Rover Deployment</h2>
+                    <p class="status">Status: <span class="status-text" id="roverStatus">Standby</span></p>
+                    <button onclick="document.getElementById('roverStatus').textContent = 'Deployed'">Deploy Rover</button>
+                </section>
+                <section class="card">
+                    <div class="icon" aria-hidden="true">🔋</div>
+                    <h2>Battery Status</h2>
+                    <p class="status">Battery: <span class="status-text" id="batteryStatus">100%</span></p>
+                    <div class="battery-track" role="progressbar" aria-label="Battery level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100%" id="batteryProgress">
+                        <div class="battery-fill" id="batteryBar">
+                        </div>
+                    </div>
+                    <button onclick="batteryDemo()">Run Operation</button>
+                </section>
+                <section class="card">
+                    <div class="icon" aria-hidden="true">📡</div>
+                    <h2>Campus Scanner</h2>
+                    <p class="status">Status: <span class="status-text" id="scanStatus">Ready</span></p>
+                    <button onclick="scanCampus()">Scan Campus</button>
+                </section>
+            </div>
+        </main>
+    </body>
+</html>
